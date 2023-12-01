@@ -8,15 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type corsBuilderNewTestData struct {
+type BuilderNewTestData struct {
 	name           string
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderNewTestCases = [...]corsBuilderNewTestData{
+var BuilderNewTestCases = [...]BuilderNewTestData{
 	{
 		name: "Success case",
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"*"},
 				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
@@ -29,22 +29,22 @@ var corsBuilderNewTestCases = [...]corsBuilderNewTestData{
 	},
 }
 
-func TestCORSBuilderNew(t *testing.T) {
-	for _, testCase := range corsBuilderNewTestCases {
+func TestBuilderNew(t *testing.T) {
+	for _, testCase := range BuilderNewTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New())
 		})
 	}
 }
 
-type corsBuilderNewFromConfigTestData struct {
+type BuilderNewFromConfigTestData struct {
 	name           string
 	conf           *Conf
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderNewFromConfigTestCases = [...]corsBuilderNewFromConfigTestData{
+var BuilderNewFromConfigTestCases = [...]BuilderNewFromConfigTestData{
 	{
 		name: "Success case",
 		conf: &Conf{
@@ -55,7 +55,7 @@ var corsBuilderNewFromConfigTestCases = [...]corsBuilderNewFromConfigTestData{
 			AllowCredentials: true,
 			MaxAge:           12 * time.Hour,
 		},
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"*"},
 				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
@@ -68,26 +68,26 @@ var corsBuilderNewFromConfigTestCases = [...]corsBuilderNewFromConfigTestData{
 	},
 }
 
-func TestCORSBuilderNewFromConfig(t *testing.T) {
-	for _, testCase := range corsBuilderNewFromConfigTestCases {
+func TestBuilderNewFromConfig(t *testing.T) {
+	for _, testCase := range BuilderNewFromConfigTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.NewFromConfig(testCase.conf))
 		})
 	}
 }
 
-type corsBuilderWithOriginsTestData struct {
+type BuilderWithOriginsTestData struct {
 	name           string
 	newOrigins     []string
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderWithOriginsTestCases = [...]corsBuilderWithOriginsTestData{
+var BuilderWithOriginsTestCases = [...]BuilderWithOriginsTestData{
 	{
 		name:       "Overwrite AllowOrigins with localhost",
 		newOrigins: []string{"localhost"},
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"localhost"},
 				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
@@ -100,26 +100,26 @@ var corsBuilderWithOriginsTestCases = [...]corsBuilderWithOriginsTestData{
 	},
 }
 
-func TestCORSBuilderWithOrigins(t *testing.T) {
-	for _, testCase := range corsBuilderWithOriginsTestCases {
+func TestBuilderWithOrigins(t *testing.T) {
+	for _, testCase := range BuilderWithOriginsTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New().WithOrigins(testCase.newOrigins...))
 		})
 	}
 }
 
-type corsBuilderWithMethodsTestData struct {
+type BuilderWithMethodsTestData struct {
 	name           string
 	newMethods     []string
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderWithMethodsTestCases = [...]corsBuilderWithMethodsTestData{
+var BuilderWithMethodsTestCases = [...]BuilderWithMethodsTestData{
 	{
 		name:       "Overwrite AllowMethods with localhost",
 		newMethods: []string{"PATCH"},
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"*"},
 				AllowMethods:     []string{"PATCH"},
@@ -132,26 +132,26 @@ var corsBuilderWithMethodsTestCases = [...]corsBuilderWithMethodsTestData{
 	},
 }
 
-func TestCORSBuilderWithMethods(t *testing.T) {
-	for _, testCase := range corsBuilderWithMethodsTestCases {
+func TestBuilderWithMethods(t *testing.T) {
+	for _, testCase := range BuilderWithMethodsTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New().WithMethods(testCase.newMethods...))
 		})
 	}
 }
 
-type corsBuilderWithHeadersTestData struct {
+type BuilderWithHeadersTestData struct {
 	name           string
 	newHeaders     []string
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderWithHeadersTestCases = [...]corsBuilderWithHeadersTestData{
+var BuilderWithHeadersTestCases = [...]BuilderWithHeadersTestData{
 	{
 		name:       "Overwrite AllowHeaders with localhost",
 		newHeaders: []string{"custom"},
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"*"},
 				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
@@ -164,26 +164,26 @@ var corsBuilderWithHeadersTestCases = [...]corsBuilderWithHeadersTestData{
 	},
 }
 
-func TestCORSBuilderWithHeaders(t *testing.T) {
-	for _, testCase := range corsBuilderWithHeadersTestCases {
+func TestBuilderWithHeaders(t *testing.T) {
+	for _, testCase := range BuilderWithHeadersTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New().WithHeaders(testCase.newHeaders...))
 		})
 	}
 }
 
-type corsBuilderWithCredentialsTestData struct {
+type BuilderWithCredentialsTestData struct {
 	name           string
 	newCredentials bool
-	expectedResult *CORSBuilder
+	expectedResult *Builder
 }
 
-var corsBuilderWithCredentialsTestCases = [...]corsBuilderWithCredentialsTestData{
+var BuilderWithCredentialsTestCases = [...]BuilderWithCredentialsTestData{
 	{
 		name:           "Overwrite AllowCredentials with localhost",
 		newCredentials: false,
-		expectedResult: &CORSBuilder{
+		expectedResult: &Builder{
 			Config: &cors.Config{
 				AllowOrigins:     []string{"*"},
 				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
@@ -196,21 +196,21 @@ var corsBuilderWithCredentialsTestCases = [...]corsBuilderWithCredentialsTestDat
 	},
 }
 
-func TestCORSBuilderWithCredentials(t *testing.T) {
-	for _, testCase := range corsBuilderWithCredentialsTestCases {
+func TestBuilderWithCredentials(t *testing.T) {
+	for _, testCase := range BuilderWithCredentialsTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New().WithCredentials(testCase.newCredentials))
 		})
 	}
 }
 
-type corsBuilderBuildTestData struct {
+type BuilderBuildTestData struct {
 	name           string
 	expectedResult *cors.Config
 }
 
-var corsBuilderBuildTestCases = [...]corsBuilderBuildTestData{
+var BuilderBuildTestCases = [...]BuilderBuildTestData{
 	{
 		name: "Success case",
 		expectedResult: &cors.Config{
@@ -224,10 +224,10 @@ var corsBuilderBuildTestCases = [...]corsBuilderBuildTestData{
 	},
 }
 
-func TestCORSBuilderBuild(t *testing.T) {
-	for _, testCase := range corsBuilderBuildTestCases {
+func TestBuilderBuild(t *testing.T) {
+	for _, testCase := range BuilderBuildTestCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			builder := &CORSBuilder{}
+			builder := &Builder{}
 			assert.Equal(t, testCase.expectedResult, builder.New().Build())
 		})
 	}
