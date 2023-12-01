@@ -6,20 +6,31 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var middlewareTestCases = []*Conf{
-	DefaultConf(),
+type middlewareTestData struct {
+	name   string
+	config *cors.Config
+}
+
+var middlewareTestCases = [...]middlewareTestData{
 	{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET"},
-		AllowHeaders:     []string{"Content-Type", "Content-Length"},
-		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
-		AllowCredentials: true,
-		MaxAge:           1 * time.Hour,
+		name: "Success case",
+		config: &cors.Config{
+			AllowAllOrigins:  true,
+			AllowMethods:     []string{"GET"},
+			AllowHeaders:     []string{"Content-Type", "Content-Length"},
+			ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+			AllowCredentials: true,
+			MaxAge:           1 * time.Hour,
+		},
 	},
-	nil,
+	{
+		name:   "Success case with nil conf",
+		config: nil,
+	},
 }
 
 func TestMiddlware(t *testing.T) {
@@ -28,7 +39,7 @@ func TestMiddlware(t *testing.T) {
 			rr := httptest.NewRecorder()
 			context, _ := gin.CreateTestContext(rr)
 			context.Request = httptest.NewRequest("GET", "/", nil)
-			m := Middleware(testCase)
+			m := Middleware(testCase.config)
 			m(context)
 		})
 	}
