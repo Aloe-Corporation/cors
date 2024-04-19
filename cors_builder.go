@@ -65,6 +65,12 @@ func (builder *Builder) WithCredentials(allowCredentials bool) *Builder {
 	return builder
 }
 
+// WithExposeHeaders sets the expose headers for CORS.
+func (builder *Builder) WithExposeHeaders(headers ...string) *Builder {
+	builder.Config.ExposeHeaders = headers
+	return builder
+}
+
 // Build returns the finalized cors.Config after applying the configured options.
 func (builder *Builder) Build() *cors.Config {
 	return builder.Config
