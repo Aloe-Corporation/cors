@@ -205,6 +205,38 @@ func TestBuilderWithCredentials(t *testing.T) {
 	}
 }
 
+type BuilderWithExposeHeadersTestData struct {
+	name           string
+	headers        []string
+	expectedResult *Builder
+}
+
+var BuilderWithExposeHeadersTestCases = [...]BuilderWithExposeHeadersTestData{
+	{
+		name:    "Overwrite AllowCredentials with localhost",
+		headers: []string{"Custom"},
+		expectedResult: &Builder{
+			Config: &cors.Config{
+				AllowOrigins:     []string{"*"},
+				AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"},
+				AllowHeaders:     []string{"Content-Type", "Content-Length", "Accept-Encoding", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
+				ExposeHeaders:    []string{"Custom"},
+				AllowCredentials: true,
+				MaxAge:           12 * time.Hour,
+			},
+		},
+	},
+}
+
+func TestBuilderWithExposeHeaders(t *testing.T) {
+	for _, testCase := range BuilderWithExposeHeadersTestCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			builder := &Builder{}
+			assert.Equal(t, testCase.expectedResult, builder.New().WithExposeHeaders(testCase.headers...))
+		})
+	}
+}
+
 type BuilderBuildTestData struct {
 	name           string
 	expectedResult *cors.Config
